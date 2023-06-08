@@ -47,6 +47,7 @@ def lppl_fit(ticker,start_date, end_date, i_date, j_date, k_date):
     i= complete_data.index.get_loc(i_date)+1
     j= complete_data.index.get_loc(j_date)+1
     k= complete_data.index.get_loc(k_date)+1
+
     print("i: ", i, "j: ", j, "k: ", k)
 
     #calculations
@@ -169,8 +170,9 @@ def lppl_fit(ticker,start_date, end_date, i_date, j_date, k_date):
     print("The optimized paramters with combining are: \n", np.round(comb_params, 5))
     # print("The optimized paramters with PSO-Down are: \n", np.round(pso_down_params, 5))
 
+    full_data = yf.download(ticker, start_date)
     def print_critical_time(a, name):
-        print("The critical time for ", name, " is: ", a[2])
+        print("The critical time for ", name, " is: ", a[2], "and the date is: ", full_data.index[np.round(a[2]).astype(np.int32)])
 
     print("The length of the dataset is: ", len(data_ln))
     print_critical_time(downhill_params, "Downhill")
@@ -209,4 +211,4 @@ def lppl_fit(ticker,start_date, end_date, i_date, j_date, k_date):
     plt.show()
 
 if __name__ == '__main__':
-    lppl_fit("BTC-USD", datetime.date(2017, 1, 1), datetime.date(2017, 12, 1), i_date=Timestamp(datetime.date(2017,3,24)), j_date=Timestamp(datetime.date(2017,7,16)), k_date=Timestamp(datetime.date(2017,9,14)))
+    lppl_fit("^GSPC", datetime.date(2020, 5, 1), datetime.date(2021, 12, 1), i_date=Timestamp(datetime.date(2020,9,2)), j_date=Timestamp(datetime.date(2021,5,7)), k_date=Timestamp(datetime.date(2021,9,2)))
