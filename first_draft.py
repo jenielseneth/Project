@@ -32,7 +32,7 @@ def opt_params(x):
     for i in range(len(data_ln)):
         #using the function from the LPPL video
         loss += (data_ln[i]-(A-B*np.power((T-i),m)*(1+C*np.cos(w*np.log(T-i)+phi))))**2#loss += np.linalg.norm(data_ln[i]-(A+B*np.power((T-i),m)+C*np.power((T-i),m)*np.cos(w*np.log(T-i)-phi)))
-    return loss
+    return loss/len(data_ln)
 
 
 
@@ -134,9 +134,9 @@ print("Calculating with the PSO-GA algorithm...")
 ga_lower_bound=np.array([len(data_ln),  pso_params[5]-1, 0, pso_params[3]-0.3])
 ga_upper_bound=np.array([pso_params[2]+20,  pso_params[5]+1, 2*np.pi, pso_params[3]+0.3])
 ga_total_params = ga.ga(ga_lower_bound, ga_upper_bound, ga_cost_func, epochs=10, num_pop=100, num_children=50, num_mutations=50)
-pso_ga_params = ga_total_params[0]
-A, B, C = linearsquares.get_A_B_C(data_ln, pso_ga_params[0], pso_ga_params[1], pso_ga_params[2], pso_ga_params[3])
-pso_ga_params = [A, B, pso_ga_params[0], pso_ga_params[3], C, pso_ga_params[1], pso_ga_params[2]]
+pso_ga_4_params = ga_total_params[0]
+A, B, C = linearsquares.get_A_B_C(data_ln, pso_ga_4_params[0], pso_ga_4_params[1], pso_ga_4_params[2], pso_ga_4_params[3])
+pso_ga_params = [A, B, pso_ga_4_params[0], pso_ga_4_params[3], C, pso_ga_4_params[1], pso_ga_4_params[2]]
 
 #PSO -> Downhill
 # pso_down_params = minimize(opt_params, pso_params, method='Nelder-Mead').x
@@ -155,7 +155,7 @@ pso_ga_loss = opt_params(pso_ga_params)
 # pso_down_loss = opt_params(pso_down_params)
 
 #all four combined
-raw_losses = np.array([1/ga_loss, 1/pso_loss, 1/ga_pso_loss, 1/pso_ga_loss])
+raw_losses = np.array([1/4, 1/4, 1/4, 1/4])
 normalized_losses = np.array([float(i)/sum(raw_losses) for i in raw_losses])
 print("this is normalized losses: ", normalized_losses)
 all_params = np.array([ga_params, pso_params, ga_pso_params, pso_ga_params])
@@ -164,7 +164,7 @@ comb_loss = opt_params(comb_params)
 
 
 #print statements
-print("Exponential loss is: ",exp_loss ,"Downhill loss is: ", downhill_loss, "PSO loss is: ", pso_loss, "Optimal Loss is: ", optimal_loss, "PSO-Downhill loss is: ", "pso_down_loss", "GA loss is: ", ga_loss, "GA-PSO loss is: ", ga_pso_loss, "Comb loss is: ", comb_loss)
+print("Exponential loss is: ",exp_loss ,"Downhill loss is: ", downhill_loss, "PSO loss is: ", pso_loss, "Optimal Loss is: ", optimal_loss, "PSO-Downhill loss is: ", "pso_down_loss", "GA loss is: ", ga_loss, "GA-PSO loss is: ", ga_pso_loss, "PSO-GA loss is: ", pso_ga_loss, "Comb loss is: ", comb_loss)
 print("Params are: [A , B , T , m , C , omega , phi]")
 print("omega: osc, ")
 print("The optimal paramters are", optimized_params)
@@ -195,7 +195,7 @@ log_ga_func = vlppl(range(data_ln.size), ga_params[0], ga_params[1], ga_params[2
 log_downhill_func = vlppl(range(data_ln.size), downhill_params[0], downhill_params[1], downhill_params[2], downhill_params[3], downhill_params[4], downhill_params[5], downhill_params[6])
 # log_pso_down_func = vlppl(range(data_ln.size), pso_down_params[0], pso_down_params[1], pso_down_params[2], pso_down_params[3], pso_down_params[4], pso_down_params[5], pso_down_params[6])
 log_pso_func = vlppl(range(data_ln.size), pso_params[0], pso_params[1], pso_params[2], pso_params[3], pso_params[4], pso_params[5], pso_params[6])
-log_ga_pso_func = vlppl(range(data_ln.size), ga_pso_params[0], ga_pso_params[1], ga_pso_params[2], pso_params[3], ga_pso_params[4], ga_pso_params[5], ga_pso_params[6])
+log_ga_pso_func = vlppl(range(data_ln.size), ga_pso_params[0], ga_pso_params[1], ga_pso_params[2], ga_pso_params[3], ga_pso_params[4], ga_pso_params[5], ga_pso_params[6])
 log_pso_ga_func = vlppl(range(data_ln.size), pso_ga_params[0], pso_ga_params[1], pso_ga_params[2], pso_ga_params[3], pso_ga_params[4], pso_ga_params[5], pso_ga_params[6])
 log_comb_func = vlppl(range(data_ln.size), comb_params[0], comb_params[1], comb_params[2], comb_params[3], comb_params[4], comb_params[5], comb_params[6])
 
