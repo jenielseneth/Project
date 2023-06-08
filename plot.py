@@ -9,9 +9,10 @@ def plot(a, b, t, m, c, w, phi, name):
         return (a-b*np.power((t-x),m)*(1+c*np.cos(w*np.log(t-x)+phi))) #(a+b*np.power((t-x),m)+c*np.power((t-x),m)*np.cos(w*np.log(t-x)-phi))
     vlppl = np.vectorize(lppl)
 
-    start_date = Timestamp('2003-07-01')
-    start_date = datetime.date(2003, 7, 1)
-    complete_data = yf.download('^GSPC',start_date,'2007-07-01')
+    start_date = Timestamp('2017-01-01')
+    start_date = datetime.date(2017, 1, 1)
+    end_date = datetime.date(2017, 12, 1)
+    complete_data = yf.download('BTC-USD',start_date, end_date)
     adj_close_data = complete_data['Adj Close']
     data = adj_close_data.values
     data_ln = np.log(data)
